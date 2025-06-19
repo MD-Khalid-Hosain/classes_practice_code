@@ -2,10 +2,11 @@ import Accordian from "./Accordian";
 import AddTask from "./components/AddTask";
 import TaskList from "./components/TaskList";
 import { initialTasks } from "./data/taskData";
-import { useState } from "react";
+import { useReducer } from "react";
+import taskReducer from "./reducers/taskReducer";
 
 export default function App() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
   const getNextId = (data) => {
     const maxId = data.reduce((prev, current) =>
       prev && prev.id > current.id ? prev.id : current.id
@@ -14,27 +15,23 @@ export default function App() {
   };
   //handler
   const handleAddTask = (text) => {
-    setTasks([
-      ...tasks,
-      {
-        id: getNextId(tasks),
-        text: text,
-        done: false,
-      },
-    ]);
+    dispatch({
+      type: "added",
+      text,
+      id: getNextId(tasks),
+    });
   };
   const handleChangeTask = (task) => {
-    const nextTask = tasks.map((t) => {
-      if (t.id === task.id) {
-        return task;
-      } else {
-        return t;
-      }
+    dispatch({
+      type: "changed",
+      task,
     });
-    setTasks(nextTask);
   };
   const handleDeleteTask = (taskId) => {
-    setTasks(tasks.filter((t) => t.id !== taskId));
+    dispatch({
+      type: "deleted",
+      taskId,
+    });
   };
   return (
     <div className="container bg-amber-400 mx-auto">

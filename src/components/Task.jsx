@@ -53,7 +53,7 @@ export default function Task({ taskData, onDeleteTask, onChangeTask }) {
         />
         {taskContent}
         <button
-          onClick={() => onDeleteTask(Task.id)}
+          onClick={() => onDeleteTask(taskData.id)}
           className="bg-red-500 rounded-md py-2 px-4 text-white cursor-pointer"
         >
           Delete
