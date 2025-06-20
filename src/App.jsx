@@ -1,12 +1,11 @@
-import Accordian from "./Accordian";
+import { useImmerReducer } from "use-immer";
 import AddTask from "./components/AddTask";
 import TaskList from "./components/TaskList";
 import { initialTasks } from "./data/taskData";
-import { useReducer } from "react";
 import taskReducer from "./reducers/taskReducer";
 
 export default function App() {
-  const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
+  const [tasks, dispatch] = useImmerReducer(taskReducer, initialTasks);
   const getNextId = (data) => {
     const maxId = data.reduce((prev, current) =>
       prev && prev.id > current.id ? prev.id : current.id
