@@ -1,6 +1,10 @@
-import { useState } from "react";
-export default function AddTask({ onAdd }) {
+import { useContext, useState } from "react";
+import { TaskContext, TaskDispatchContext } from "../context/TaskContext";
+import { getNextId } from "../utils/getNextId";
+export default function AddTask() {
   const [text, setText] = useState("");
+  const dispatch = useContext(TaskDispatchContext);
+  const tasks = useContext(TaskContext);
   return (
     <>
       <input
@@ -12,7 +16,11 @@ export default function AddTask({ onAdd }) {
       />
       <button
         onClick={() => {
-          onAdd(text);
+          dispatch({
+            type: "added",
+            text,
+            id: getNextId(tasks),
+          });
           setText("");
         }}
         className="bg-blue-500 rounded-md py-2 px-4 text-white cursor-pointer"

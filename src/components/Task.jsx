@@ -1,6 +1,8 @@
-import { useState } from "react";
-export default function Task({ taskData, onDeleteTask, onChangeTask }) {
+import { useContext, useState } from "react";
+import { TaskDispatchContext } from "../context/TaskContext";
+export default function Task({ taskData }) {
   const [isEaditing, setIsEaditing] = useState(false);
+  const dispatch = useContext(TaskDispatchContext);
   let taskContent;
   if (isEaditing) {
     taskContent = (
@@ -10,9 +12,12 @@ export default function Task({ taskData, onDeleteTask, onChangeTask }) {
           className="w-40 bg-white m-3 rounded-md p-2"
           value={taskData.text}
           onChange={(e) => {
-            onChangeTask({
-              ...taskData,
-              text: e.target.value,
+            dispatch({
+              type: "changed",
+              task: {
+                ...taskData,
+                text: e.target.value,
+              },
             });
           }}
         />
@@ -44,16 +49,24 @@ export default function Task({ taskData, onDeleteTask, onChangeTask }) {
           type="checkbox"
           checked={taskData.done}
           onChange={(e) => {
-            onChangeTask({
-              ...taskData,
-              done: e.target.checked,
+            dispatch({
+              type: "changed",
+              task: {
+                ...taskData,
+                done: e.target.checked,
+              },
             });
           }}
           className="h-5 w-5 ml-2"
         />
         {taskContent}
         <button
-          onClick={() => onDeleteTask(taskData.id)}
+          onClick={() =>
+            dispatch({
+              type: "deleted",
+              taskId: taskData.id,
+            })
+          }
           className="bg-red-500 rounded-md py-2 px-4 text-white cursor-pointer"
         >
           Delete
